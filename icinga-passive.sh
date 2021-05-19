@@ -89,8 +89,6 @@ for CHECK in "${SERVICES[@]}"; do
     PERFORMANCE_DATA=$(echo "${OUTPUT}" | cut -d'|' -f2)
     JSON=$(printf "${FMT}" ${STATUS} "${PLUGIN_OUTPUT}" "${PERFORMANCE_DATA}" "${HOST}")
 
-echo ${JSON}
-
     ${CURL} --fail -k -s -u ${ICINGA_USER:-root}:${ICINGA_PASSWORD:-password} -H 'Accept: application/json' -X POST \
         "https://${ICINGA_HOST:-icinga2}:${ICINGA_PORT:-5665}/v1/actions/process-check-result?service=${HOST}!${SERVICE}" \
         -d "${JSON}"
