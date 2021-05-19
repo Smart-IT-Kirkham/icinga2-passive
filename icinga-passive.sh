@@ -12,9 +12,14 @@ RELEASE="Revision 1.0.0"
 # ICINGA_USER=
 # ICINGA_PASSWORD=
 
+CURL=$(which curl)
+SCRIPT_PATH=$(dirname "$0")
+cd "${SCRIPT_PATH}" || exit
+
 if [ -f '.env' ]; then
     source .env
 fi
+
 
 print_usage() {
   echo ""
@@ -84,9 +89,7 @@ for CHECK in "${SERVICES[@]}"; do
     PERFORMANCE_DATA=$(echo "${OUTPUT}" | cut -d'|' -f2)
     JSON=$(printf "${FMT}" ${STATUS} "${PLUGIN_OUTPUT}" ["${PERFORMANCE_DATA}"] "${HOST}")
 
-    # echo ${JSON} | jq
-
-    curl --fail -k -s -u ${ICINGA_USER:-root}:${ICINGA_PASSWORD:-password} -H 'Accept: application/json' -X POST \
+    ${CURL} --fail -k -s -u ${ICINGA_USER:-root}:${ICINGA_PASSWORD:-password} -H 'Accept: application/json' -X POST \
         "https://${ICINGA_HOST:-icinga2}:${ICINGA_PORT:-5665}/v1/actions/process-check-result?service=${HOST}!${SERVICE}" \
         -d "${JSON}"
 
