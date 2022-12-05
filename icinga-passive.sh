@@ -79,7 +79,7 @@ if [ -z "${REPORTING_HOST}" ]; then
   REPORTING_HOST=$(hostname -f)
 fi
 
-SERVICES=("check_disk|-w 10% -c 5% -l -A -I /run/docker -I /var/lib/docker" \
+SERVICES=("check_disk|-w 10% -c 5% -l -A -I /run/docker -I /var/lib/docker -I /snap" \
     "check_load|-w 5,10,15 -c 10,15,20" \
     "check_mem|-u -C -w 85 -c 92 " \
     "check_procs|-w 780 -c 950" \
